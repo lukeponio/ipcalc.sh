@@ -1,0 +1,13 @@
+{
+  "name": "ipcalc-sh",
+  "private": true,
+  "type": "module",
+  "license": "GPL-2.0-only",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "fuzz": "node test/fuzz.mjs",
+    "golden": "node test/gen-golden.mjs",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  }
+}

@@ -1,0 +1,10 @@
+name = "ipcalc-sh"
+main = "src/worker.js"
+compatibility_date = "2026-10-01"
+
+[vars]
+BROWSER_REDIRECT = "https://subnetting.io/"
+
+routes = [
+  { pattern = "ipcalc.sh", custom_domain = true },
+]
