@@ -51,6 +51,12 @@ shows (`--reverse-dns` on a /0-/7 segfaults, a full-range IPv6 `-d` aborts).
 
 Browsers on ipcalc.sh are redirected to `https://subnetting.io/?q=<path>`.
 
+## Related
+
+- [subnetting.io](https://subnetting.io/) – the browser version: subnet calculator, VLAN planner, guides.
+- [NetDiagrams](https://netdiagrams.com/?utm_source=ipcalc.sh&utm_medium=referral&utm_campaign=crosslink&utm_content=readme) – network diagram examples and templates by industry, and a free tool that draws them from NetBox in draw.io.
+- [SegAudit](https://segaudit.com/?utm_source=ipcalc.sh&utm_medium=referral&utm_campaign=crosslink&utm_content=readme) – finds segmentation faults in IT/OT firewall rules (Palo Alto, Fortinet, Cisco, Check Point) and proposes fixes, each with a rollback.
+
 ## Layout
 
 - `src/ipcalc.js` the faithful port. Quirks are kept on purpose (see below). Do not change its output.
