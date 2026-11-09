@@ -9,8 +9,10 @@
 // Path segments become argv words. Splitting "a/b" into two words is exactly
 // what ipcalc itself does with its arguments, so this mapping is lossless.
 //   curl ipcalc.sh/ng/192.168.0.1/24     == Red Hat/Fedora ipcalc 192.168.0.1/24
+//   curl ipcalc.sh/help                  extras (src/extras.js), only for input ipcalc rejects
 import { ipcalc } from './ipcalc.js';
 import { ipcalcRh } from './ipcalc-rh.js';
+import { extras } from './extras.js';
 
 const BROWSER = /Mozilla\//;
 const CLI = /^(curl|Wget|HTTPie|xh|aria2|PowerShell|libcurl|Go-http-client|python-requests|Lynx|Links|w3m)\b/i;
@@ -47,7 +49,7 @@ export const MAX_PATH = 1024;
 export function textResponse(pathname, method = 'GET') {
   const rh = pathname === '/ng' || pathname.startsWith('/ng/');
   const argv = rh ? pathToArgvRh(pathname.slice(3)) : pathToArgv(pathname);
-  let { stdout, status } = rh ? ipcalcRh(argv) : ipcalc(argv);
+  let { stdout, status } = rh ? ipcalcRh(argv) : extras(argv) ?? ipcalc(argv);
   if (status === 'truncated') stdout += '\n[ipcalc.sh: output truncated at 1 MiB]\n';
   const random = rh && argv.some((a) => /^-[^-]*r|^--r/.test(a)); // --random-private
   const body = Uint8Array.from(stdout, (c) => c.charCodeAt(0));

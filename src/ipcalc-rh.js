@@ -45,7 +45,7 @@ class Hang extends Error {}
 class Truncated extends Error {}
 
 // ---- glibc address parsing/printing ----------------------------------------
-function inet_pton4(s) {
+export function inet_pton4(s) {
   let saw_digit = 0, octets = 0;
   const tmp = [0, 0, 0, 0];
   let tp = 0;
@@ -68,7 +68,7 @@ function inet_pton4(s) {
 const pton4u = (s) => { const b = inet_pton4(s); return b ? ((b[0] << 24) | (b[1] << 16) | (b[2] << 8) | b[3]) >>> 0 : null; };
 const ntop4 = (n) => [(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255].join('.');
 
-function inet_pton6(src) {
+export function inet_pton6(src) {
   const tmp = new Uint8Array(16);
   let tp = 0, colonp = -1, i = 0;
   if (src.length === 0) return null;
@@ -120,7 +120,7 @@ function inet_pton6(src) {
   return tmp;
 }
 
-function inet_ntop6(a) {
+export function inet_ntop6(a) {
   const w = [];
   for (let i = 0; i < 16; i += 2) w.push((a[i] << 8) | a[i + 1]);
   let best = { base: -1, len: 0 }, cur = { base: -1, len: 0 };
