@@ -49,12 +49,41 @@ are refused with a message; output stops at 1 MiB (`-S 32 0.0.0.0/0` would be
 4 billion lines). Crashes in the real tool are reproduced as what a terminal
 shows (`--reverse-dns` on a /0-/7 segfaults, a full-range IPv6 `-d` aborts).
 
+## Extras
+
+New URL forms that ipcalc 0.51 rejects today (it prints `INVALID ...` for
+them), so no existing output changes. They work for IPv4 and IPv6 and take any
+mix of addresses, CIDRs, `address mask` pairs and ranges (`a-b`), separated by
+`/`, `+` or commas. `curl ipcalc.sh/help` lists them.
+
+```
+curl ipcalc.sh/10.1.2.7/in/10.1.0.0/22          # yes or no (x-ipcalc-exit 0 or 1)
+curl ipcalc.sh/24/in/20                         # how many /24s in a /20 (and the backwards question)
+curl ipcalc.sh/24/in/10.0.0.0/20                # ...in a given network
+curl ipcalc.sh/short/10.0.0.0/20                # short summary with a Contains: line
+curl ipcalc.sh/merge/10.0.0.0/24/10.0.1.0/24    # merge/summarize into the fewest CIDRs
+curl ipcalc.sh/merge/10.0.0.5-10.0.0.200        # range to CIDRs, IPv6 too
+curl ipcalc.sh/exclude/10.0.0.0/16/10.0.5.0/24  # first block minus the rest
+curl ipcalc.sh/overlap/10.0.0.0/23/10.0.1.0/24  # overlapping pairs (x-ipcalc-exit 1 if none)
+curl ipcalc.sh/expand/192.168.1.0/29            # every address (up to 65,536)
+curl ipcalc.sh/split/10.0.0.0/16/12             # 12 equal subnets
+curl ipcalc.sh/acl/10.0.0.0/24/10.0.9.1         # permit 10.0.0.0 0.0.0.255 / permit host ...
+curl ipcalc.sh/prefix-list/BRANCH/10.0.0.0/8    # ip prefix-list BRANCH seq 5 permit 10.0.0.0/8
+```
+
+Aliases: `aggregate`/`summarize` for `merge`, `subtract` for `exclude`. A dotted
+word right after an address is read as its mask when it is one (`0.0.0.0`
+never is). Errors print one `ipcalc.sh: ...` line with `x-ipcalc-exit: 2`.
+Code: `src/extras.js`, tests in `test/extras.test.mjs` (which also check that
+the baseline rejects every extras form).
+
 Browsers on ipcalc.sh are redirected to `https://subnetting.io/?q=<path>`.
 
 ## Layout
 
 - `src/ipcalc.js` the faithful port. Quirks are kept on purpose (see below). Do not change its output.
 - `src/ipcalc-rh.js` port of Red Hat ipcalc 1.0.3, served at `/ng/`. `test/rh/` holds its golden file, fuzzer and reference build script.
+- `src/extras.js` ipcalc.sh-only commands (in, short, merge, exclude, overlap, expand, split, acl, prefix-list, help).
 - `src/worker.js` Cloudflare Worker: URL to argv, User-Agent routing.
 - `test/golden.json` real ipcalc output for ~3,000 inputs. `test/golden.test.mjs` checks the port against it.
 - `test/fuzz.mjs` live differential fuzz against the real Perl tool.
